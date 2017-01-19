@@ -4,3 +4,8 @@
    width: 100px;
    height: 50px;
 }
+h1 {
+    text-shadow: -1px 5px 5px rgba(75, 137, 167, 0.88);
+     font-size: 35px;
+     color: green;
+}

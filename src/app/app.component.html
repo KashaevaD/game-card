@@ -1,39 +1,47 @@
-<div class="container">
-  <div class="row">
+<div class="container" (isShow)=isAlive($event)> 
+  <div class="row" >
 
-    <div class="col-md-4" *ngIf="!this.isStart">
+    <div class="col-md-4" *ngIf="!isStart">
         <h1>Click to start the game</h1>
     </div>
-    <div class="col-md-4" *ngIf="!this.isStart">
+    <div class="col-md-4" *ngIf="!isStart">
       <div id="start">
       <img [src]="imgStart" (click)="isVisible()" alt="Start Game" title="Start Game" >
       </div>
     </div>
-     <div class="col-md-4" *ngIf="this.isStart">
-       <h1>Game Start</h1>
+     <div class="col-md-4">
+       <h1 *ngIf="isStart && !isOkSize">Game Start</h1>
+       <h1 *ngIf="isStart && isOkSize">My darling player!!</h1>
      </div>
 
   </div>
 <!-------------------------------------------------------------->
-   <div class="row" *ngIf="this.isStart">
-
-      <div class="col-md-4">
+   <div class="row" *ngIf='!isOkSize && isStart'>
+      <div class="col-md-6" >
         <div class="form-group has-success">
-            <label class="control-label" for="inputSuccess">Input dimension (n > 1 and n < 9 and n % 2 === 0)</label>
+
+          <label for="select" class="control-label">Select level</label>
+          <!--<div class="col-md-12">-->
+            <select class="form-control" id="select" [(ngModel)]="level">
+              <option value="1" >Simple</option>
+              <option value="2" >Hard</option>
+            </select>
+          <!--</div>-->
+          <br>
+
+
+            <label class="control-label" for="inputSuccess">Input dimension (n > 3 and n < 11 and n % 2 === 0)</label>
             <input type="text" class="form-control" id="inputSuccess"  id="size" #e>
             <br>
-            <a href="#" class="btn btn-success" (click)='checkSize(e.value)' *ngIf='!isOkSize'>Click on me</a>
+            <a href="#" class="btn btn-success" (click)='getSize(e.value,level)' *ngIf='!isOkSize'>Click on me</a>
         </div>
          <h1 *ngIf="isOkSize">Okey, lets try to play!</h1>
       </div>
 
-      <div class="col-md-8">
-       
-      </div>
-
    </div>
    <!--!------------------------------------------------------------>
-   <app-cards [size]="size"  [show]='isOkSize'  *ngIf="this.isStart"></app-cards>
+   <app-cards [size]="size" [level]="level" [show]='isOkSize'  *ngIf="this.isStart"></app-cards>
+    <!--<div class='timer'><timer [time]='time'></timer></div>-->
    
 
 

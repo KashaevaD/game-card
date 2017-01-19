@@ -10,37 +10,36 @@ export class AppComponent {
   isStart:boolean = false;
   size:number;
   isOkSize:boolean = false;
-  
-  
 
+  level:string; 
 
+  isLive:boolean = true;
+  // hideAll:boolean = true;
+
+  
   isVisible():void {
     this.isStart = true;
   }
 
-  checkSize(size):void {
+  getSize(size, levelChoose):void {
     this.size = size;
-
+    this.level = levelChoose;
     if (this.isNumeric(this.size)) {
-      this.isOkSize= true;
-      // this.createRandomImage();
-      // this.rows = this.createRows();
-      // this.cells = this.createRows();
+      this.isOkSize= true; 
      
     }
-
     else {
       alert("You input unnormal number");
     }
-   
-  }
-  //_____________________________________________________________
-
- isNumeric(n:any) {
-    return !isNaN(parseFloat(n)) && isFinite(n) && n > 1 && n < 9 && n % 2 === 0;
   }
 
+   isNumeric(n:any) {
+      return !isNaN(parseFloat(n)) && isFinite(n) && n > 1 && n < 11 && n % 2 === 0;
+  }
 
-  //_____________________________________________________________
+  isAlive(i:boolean) {
+    this.isLive = false;
+  }
+
 
 }

@@ -5,11 +5,15 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { CardsComponent } from './cards/cards.component';
+import { TimerComponent } from './timer/timer.component';
+import { LivesComponent } from './lives/lives.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CardsComponent
+    CardsComponent,
+    TimerComponent,
+    LivesComponent
   ],
   imports: [
     BrowserModule,

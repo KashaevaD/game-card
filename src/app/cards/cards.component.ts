@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input,Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'app-cards',
@@ -6,13 +6,21 @@ import { Component, OnInit, Input} from '@angular/core';
   styleUrls: ['./cards.component.css']
 })
 export class CardsComponent implements OnInit {
-  @Input() size;
-  @Input() show;
-  game:string = "assets/img/game.jpg";
-  image:string = "assets/img/0.png";
-  click:boolean = false;
+  @Input() size;                          // count of cells = size*size
+  @Input() show;                          // is normal size, neeed to show button "Game Start"
+  @Input() level;                         //level of game
 
-  images  = [
+  @Output() isShow:EventEmitter<boolean> = new EventEmitter(); // variable to app to count lives............
+  //lives:number = 3;                     //count of lives
+  livesImage:string[] = [                 //count heart
+    "assets/img/live.ico",
+    "assets/img/live.ico",
+    "assets/img/live.ico"
+  ];
+
+  clickBtnStart:boolean = false;          //show table or not
+
+  images  = [                             //images in table
     {
       src: 'assets/img/0.jpg',
       id: 0
@@ -20,22 +28,32 @@ export class CardsComponent implements OnInit {
     {
       src: 'assets/img/1.jpg',
       id: 1
-    },
-    {
-      src: 'assets/img/2.jpg',
-      id: 2
-    },
-    {
-      src: 'assets/img/3.jpg',
-      id: 3
     }
+    // {
+    //   src: 'assets/img/2.jpg',
+    //   id: 2
+    // },
+    // {
+    //   src: 'assets/img/3.jpg',
+    //   id: 3
+    // }
   ];
+  data: {src:string, id:number}[][];        //our data with image and their id(name)
 
-  data: {src:string, id:number}[][];
+  countOpened:number = 0;                   //count active(click) images           
+  currentOpened: any[] = [];                //current opened image
+  hideClass:string;                         //variable for hide class
+  activeClass:string;                       //variable for active class
 
-  count:number = 0;
-  currentOpened: any[] = [];
+  imageWin:string = "assets/img/win.gif";   //image of winner
+  imageLost:string = "assets/img/lost.gif"; //image of winner
+  countHiddenBlock: number = 0;             //count of hidden block, need to count disappeared pair image to choose the win or not
+  isWin:boolean;                            //need to show image win on html
+  isLost:boolean = false;                   //get false, when your lives run out
+  //timeOnScreen: number = 60;                     //timer variable
 
+  //isRestart:boolean = false;
+ 
   constructor() {
 
   }
@@ -44,20 +62,45 @@ export class CardsComponent implements OnInit {
 
   }
 
-  getStart():void {
-    this.click = true;
-    this.show = false;
-    this.data = this.createTable();
-    console.log('result Array',this.data);
+  getStart(i):void {                                  //start when your click on btn "GameStart"
+    //if (this.livesImage.length > 0) {
+      this.clickBtnStart =  true;
+      this.isWin = false;
+      this.show = false;
+      this.data = this.createTable();
+      this.isShow.emit(i);
+      console.log('result Array',this.data);
+    //}
+    //else {
+      //this.areYouLost();
+   //}
+    this.setDiffClassForLevel();  
   }
 
-  private createRandomImage(array):any[] {
-    return array.sort(function() {
-        return 0.5 - Math.random();
-    });
+  getRestart(i) {  
+        this.isWin = false;
+       // this.isLost = false;                        //restart when your click on btn "New game"
+        this.data = [[]];
+        this.clickBtnStart =  true;
+        this.data = this.createTable();
+        this.setDiffClassForLevel();  
+        
+        //this.isRestart = true;
+       // this.livesImage.pop();
   }
 
-  private createTable():any[][] {
+  private setDiffClassForLevel() {                    //set different class to element dependent on level
+     if (this.level == 2) {
+        this.hideClass = "hide";
+        this.activeClass = "active";
+    }
+    else {
+        this.hideClass = "hideBlock";
+        this.activeClass = "activeBlock";
+    }
+  }
+
+  private createTable():any[][] {                     //create double array
     let current = this.createArray();
     let currentArray = this.createRandomImage(current);
     let matrix = [[]];
@@ -72,7 +115,13 @@ export class CardsComponent implements OnInit {
     return matrix;
   }
 
-  private createArray():any[] {
+   private createRandomImage(array):any[] {           //random order in array
+    return array.sort(function() {
+        return 0.5 - Math.random();
+    });
+  }
+
+  private createArray():any[] {                       //create array with img
     let arr = [];
     let count = 0;
 
@@ -87,38 +136,59 @@ export class CardsComponent implements OnInit {
 
     return result;
   }
-  /*________________________________________________________*/
-  addClassActive(i):void {
-    if(this.count < 2) {
-      let img = i.target.firstElementChild;
-      this.currentOpened.push(img);
-      img.classList.add("active");
-      console.log(img.name);
-      this.count++;
+  /*__________________________________________________*/
+  addClassActive(i):void { //add active class on active td
+    let img = i.target.firstElementChild;  
+    if(this.countOpened < 2) {
+      //if(img === this.currentOpened[0] || img === this.currentOpened[1])return;
+        if (img !== null) {
+          this.currentOpened.push(img);
+          img.classList.add(this.activeClass);
+          this.countOpened++;
+        } 
+     
     }
-    else {
-      //for(let i = 0; i < this.currentOpened.length - 1; i++) {
-        if (this.currentOpened[0].name === this.currentOpened[1].name) {
-          this.currentOpened[0].parentElement.parentElement.classList.add("hide");
-          this.currentOpened[1].parentElement.parentElement.classList.add("hide");
-          this.currentOpened = [];
-          // break;
-        }
-        else {
-          this.currentOpened[0].classList.remove("active");
-          this.currentOpened[1].classList.remove("active");
-        }
-      //}
-      this.count = 0;
-      this.currentOpened = [];
-    }
-    // if (this.currentOpened[0].name === this.currentOpened[i+1].name) {
+    else  if (this.countOpened === 2) {
 
-    // }
-    console.log('current');
-    console.log(this.currentOpened);
+          if (this.currentOpened[0].name === this.currentOpened[1].name) {
+            this.addClassHide();
+          }
+          this.resetSettings();
+    }
+
+    this.areYouWin();
+   
   }
 
- }
+  private addClassHide():void {
+      this.currentOpened[0].parentElement.parentElement.classList.add(this.hideClass); // to do opacity:0 for td (td->div->img)
+      this.currentOpened[1].parentElement.parentElement.classList.add(this.hideClass); // to do opacity:0 for td (td->div->img)
+      this.countHiddenBlock++;
+  }
+
+  private resetSettings():void {
+      this.currentOpened[0].classList.remove(this.activeClass);
+      this.currentOpened[1].classList.remove(this.activeClass);
+      this.countOpened = 0;
+      this.currentOpened = [];
+  }
+
+  private areYouWin():void {
+     if (this.countHiddenBlock === Math.pow(this.size,2) /2 ){
+      this.isWin = true;
+      this.countHiddenBlock = 0;
+    }
+  }
+
+  // private areYouLost():void {
+  //   //if (!this.livesImage.length) {
+  //    this.isLost = true;
+  //   //}
+  // }  
+  /*_____________________________________________________________________*/
+
+}
+
+
 
 

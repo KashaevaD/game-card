@@ -1,6 +1,29 @@
-<a href="#" class="btn btn-success" (click)='getStart()' *ngIf="show">Start Game</a>
 
-<div class="row" *ngIf="click">
+  <div class="col-md-4">
+    <a href="#" class="btn btn-success" (click)='getStart()' *ngIf="show">Start Game</a>
+    <a href="#" class="btn btn-success" (click)='getRestart()' *ngIf="isWin && !isLost">New Game</a>
+  </div>
+
+  <div class="col-md-4" *ngIf="clickBtnStart">
+    <div *ngFor="let live of livesImage" class="heartDiv">
+      <img [src]="live" width="50" height="50" class="heart" />
+    </div>
+  </div>
+
+  <div class="col-md-4" *ngIf="clickBtnStart">
+    <!--<h1>{{timeOnScreen}}</h1>-->
+  </div>
+
+  <div class="col-md-12" *ngIf="isWin">
+     <img [src]="imageWin" width="600" height="500" class="winlost" />
+  </div>
+
+  <div class="col-md-12" *ngIf="isLost">
+     <img [src]="imageLost" width="800" height="600" class="winlost" />
+  </div>
+
+
+<div class="row" *ngIf="clickBtnStart && !isLost">
 
   <div class="col-md-12">
        <table>
