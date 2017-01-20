@@ -7,13 +7,17 @@ import { AppComponent } from './app.component';
 import { CardsComponent } from './cards/cards.component';
 import { TimerComponent } from './timer/timer.component';
 import { LivesComponent } from './lives/lives.component';
+import { LevelComponent } from './level/level.component';
+import { WinOrLostComponent } from './win-or-lost/win-or-lost.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CardsComponent,
     TimerComponent,
-    LivesComponent
+    LivesComponent,
+    LevelComponent,
+    WinOrLostComponent
   ],
   imports: [
     BrowserModule,

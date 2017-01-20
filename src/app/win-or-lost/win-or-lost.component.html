@@ -1,0 +1,8 @@
+ <div class="col-md-12" *ngIf="isWin">
+     <img [src]="imageWin" width="600" height="500" class="winlost" />
+  </div>
+
+  <div class="col-md-12" *ngIf="time===0 && !isWin">
+     <img [src]="imageLost" width="800" height="600" class="winlost" />
+  </div>
+

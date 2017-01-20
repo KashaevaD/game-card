@@ -6,44 +6,64 @@
     </div>
     <div class="col-md-4" *ngIf="!isStart">
       <div id="start">
-      <img [src]="imgStart" (click)="isVisible()" alt="Start Game" title="Start Game" >
+      <img [src]="imgStart" (click)="isVisibleAllGame()" alt="Start Game" title="Start Game" >
       </div>
     </div>
      <div class="col-md-4">
-       <h1 *ngIf="isStart && !isOkSize">Game Start</h1>
-       <h1 *ngIf="isStart && isOkSize">My darling player!!</h1>
+       <h1 *ngIf="isStart && !isVerifiedSettings">Game Settings</h1>
+       <h1 *ngIf="isVerifiedSettings">My darling player!!</h1>
+       
      </div>
 
   </div>
 <!-------------------------------------------------------------->
-   <div class="row" *ngIf='!isOkSize && isStart'>
+   <div class="row" *ngIf='!isVerifiedSettings && isStart'>
       <div class="col-md-6" >
         <div class="form-group has-success">
 
+          <!--Choose the level-->
           <label for="select" class="control-label">Select level</label>
-          <!--<div class="col-md-12">-->
             <select class="form-control" id="select" [(ngModel)]="level">
               <option value="1" >Simple</option>
               <option value="2" >Hard</option>
             </select>
-          <!--</div>-->
           <br>
-
-
-            <label class="control-label" for="inputSuccess">Input dimension (n > 3 and n < 11 and n % 2 === 0)</label>
-            <input type="text" class="form-control" id="inputSuccess"  id="size" #e>
-            <br>
-            <a href="#" class="btn btn-success" (click)='getSize(e.value,level)' *ngIf='!isOkSize'>Click on me</a>
+          <!--Choose the dimension-->
+          <label for="select" class="control-label">Select dimension</label>
+          <select class="form-control" id="select" [(ngModel)]="size">
+              <option value="2" >2x2</option>
+              <option value="4" >4x4</option>
+              <option value="4" >6x6</option>
+          </select>
+          <br>
+          <a href="#" class="btn btn-success" (click)='getSize(size, level)' *ngIf='!isVerifiedSettings'>Click on me</a>
         </div>
-         <h1 *ngIf="isOkSize">Okey, lets try to play!</h1>
       </div>
 
    </div>
    <!--!------------------------------------------------------------>
-   <app-cards [size]="size" [level]="level" [show]='isOkSize'  *ngIf="this.isStart"></app-cards>
-    <!--<div class='timer'><timer [time]='time'></timer></div>-->
-   
+  <div class="row">
+      <div class="col-md-6">
+        <!--Timer-->
+        <app-timer [time]="time" *ngIf="isTimerTick"></app-timer> 
+      </div>
+      <div class="col-md-6">
+        <!--Lives-->
+        <app-lives *ngIf='isVerifiedSettings'></app-lives>
+      </div>
+   </div>
 
+   <div class="row">
+      <div class="col-md-12">
+          <!--Table with cards-->
+          <app-cards [size]="size" [level]="level" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick" 
+          (checkTimer)=isWork($event) (isShowTimer)=isStartTimer($event) (showImageWin)=setWin($event) ></app-cards>
+      </div>
 
-
+      <div class="col-md-12">
+          <!--Show gif when you win or loose-->
+          <app-win-or-lost [time]="time" [isWin]="isWin"> </app-win-or-lost>
+      </div>
+   </div>
+    
 </div>

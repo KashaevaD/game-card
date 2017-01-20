@@ -12,4 +12,10 @@ export class LivesComponent implements OnInit {
   ngOnInit() {
   }
 
+    livesImage:string[] = [                 //count heart
+    "assets/img/live.ico",
+    "assets/img/live.ico",
+    "assets/img/live.ico"
+    ];
+
 }

@@ -5,18 +5,16 @@ import { Component, OnInit, Input,Output, EventEmitter} from '@angular/core';
   templateUrl: './cards.component.html',
   styleUrls: ['./cards.component.css']
 })
-export class CardsComponent implements OnInit {
-  @Input() size;                          // count of cells = size*size
-  @Input() show;                          // is normal size, neeed to show button "Game Start"
-  @Input() level;                         //level of game
 
-  @Output() isShow:EventEmitter<boolean> = new EventEmitter(); // variable to app to count lives............
-  //lives:number = 3;                     //count of lives
-  livesImage:string[] = [                 //count heart
-    "assets/img/live.ico",
-    "assets/img/live.ico",
-    "assets/img/live.ico"
-  ];
+export class CardsComponent implements OnInit {
+  @Input() size;                                   // count of cells = size*size
+  @Input() showBtnToStartGame;                     // is normal size, neeed to show button "Game Start"
+  @Input() level;                                  //level of game
+  @Input() isTimerTick;
+
+  @Output() checkTimer:EventEmitter<boolean> = new EventEmitter();  // true - you are winner, false - you are luser               
+  @Output() isShowTimer:EventEmitter<boolean> = new EventEmitter(); // variable to show the timer on main app
+  @Output() showImageWin:EventEmitter<any> = new EventEmitter();
 
   clickBtnStart:boolean = false;          //show table or not
 
@@ -45,31 +43,30 @@ export class CardsComponent implements OnInit {
   hideClass:string;                         //variable for hide class
   activeClass:string;                       //variable for active class
 
-  imageWin:string = "assets/img/win.gif";   //image of winner
-  imageLost:string = "assets/img/lost.gif"; //image of winner
   countHiddenBlock: number = 0;             //count of hidden block, need to count disappeared pair image to choose the win or not
-  isWin:boolean;                            //need to show image win on html
-  isLost:boolean = false;                   //get false, when your lives run out
-  //timeOnScreen: number = 60;                     //timer variable
-
-  //isRestart:boolean = false;
- 
+   
   constructor() {
 
   }
 
   ngOnInit() {
-
+  
   }
 
-  getStart(i):void {                                  //start when your click on btn "GameStart"
+  getStart(button):void {                                  //start when your click on btn "GameStart"
     //if (this.livesImage.length > 0) {
+      this.showImageWin.emit(false);
+      this.checkTimer.emit(false);
       this.clickBtnStart =  true;
-      this.isWin = false;
-      this.show = false;
+     // this.isWin = false;
+      this.showBtnToStartGame = false;
       this.data = this.createTable();
-      this.isShow.emit(i);
-      console.log('result Array',this.data);
+
+      this.isTimerTick = button.returnValue;
+      this.isShowTimer.emit(this.isTimerTick); 
+     
+
+      
     //}
     //else {
       //this.areYouLost();
@@ -77,17 +74,18 @@ export class CardsComponent implements OnInit {
     this.setDiffClassForLevel();  
   }
 
-  getRestart(i) {  
-        this.isWin = false;
-       // this.isLost = false;                        //restart when your click on btn "New game"
-        this.data = [[]];
-        this.clickBtnStart =  true;
-        this.data = this.createTable();
-        this.setDiffClassForLevel();  
+
+  // getRestart(i) {  
+  //       //this.isWin = false;
+  //      // this.isLost = false;                        //restart when your click on btn "New game"
+  //       this.data = [[]];
+  //       this.clickBtnStart =  true;
+  //       this.data = this.createTable();
+  //       this.setDiffClassForLevel();  
         
-        //this.isRestart = true;
-       // this.livesImage.pop();
-  }
+  //       //this.isRestart = true;
+  //      // this.livesImage.pop();
+  // }
 
   private setDiffClassForLevel() {                    //set different class to element dependent on level
      if (this.level == 2) {
@@ -138,26 +136,26 @@ export class CardsComponent implements OnInit {
   }
   /*__________________________________________________*/
   addClassActive(i):void { //add active class on active td
+    console.log(this.isTimerTick);
     let img = i.target.firstElementChild;  
-    if(this.countOpened < 2) {
-      //if(img === this.currentOpened[0] || img === this.currentOpened[1])return;
-        if (img !== null) {
-          this.currentOpened.push(img);
-          img.classList.add(this.activeClass);
-          this.countOpened++;
-        } 
-     
+    if(this.currentOpened.length < 2) {
+      if (img !== null) {
+        this.currentOpened.push(img);
+        img.classList.add(this.activeClass);
+      } 
     }
-    else  if (this.countOpened === 2) {
-
-          if (this.currentOpened[0].name === this.currentOpened[1].name) {
+    else  if (this.currentOpened.length === 2) {
+        if (this.currentOpened[0].name === this.currentOpened[1].name) {
             this.addClassHide();
-          }
-          this.resetSettings();
+        }
+        this.resetSettings();
     }
 
-    this.areYouWin();
-   
+    if(this.areYouWin()) {
+       this.checkTimer.emit(true);
+       this.showImageWin.emit(true);
+       this.showBtnToStartGame = true;
+    }
   }
 
   private addClassHide():void {
@@ -169,23 +167,29 @@ export class CardsComponent implements OnInit {
   private resetSettings():void {
       this.currentOpened[0].classList.remove(this.activeClass);
       this.currentOpened[1].classList.remove(this.activeClass);
-      this.countOpened = 0;
       this.currentOpened = [];
   }
 
-  private areYouWin():void {
-     if (this.countHiddenBlock === Math.pow(this.size,2) /2 ){
-      this.isWin = true;
+  /*_____________________________________________________________________*/
+  private areYouWin():boolean {
+     if (this.countHiddenBlock === Math.pow(this.size,2) /2  && this.isTimerTick){
+      // this.isWin = true;
       this.countHiddenBlock = 0;
+      this.currentOpened = [];
+      return true;
+      //this.showImageWin.emit();
+     // this.checkTimer = true;
     }
   }
 
-  // private areYouLost():void {
+  //  private areYouLost():void {
   //   //if (!this.livesImage.length) {
-  //    this.isLost = true;
-  //   //}
-  // }  
-  /*_____________________________________________________________________*/
+  //       this.isLost = true;
+  //       this.checkTimer.emit(false);
+  //       //this.checkTimer = false;
+  // //   //}
+  //  }  
+
 
 }
 
