@@ -49,7 +49,7 @@
       </div>
       <div class="col-md-6">
         <!--Lives-->
-        <app-lives *ngIf='isVerifiedSettings'></app-lives>
+        <app-lives [save]="saveLive" [time]="time" (livesImage)=isAlive($event) *ngIf='isVerifiedSettings'></app-lives>
       </div>
    </div>
 

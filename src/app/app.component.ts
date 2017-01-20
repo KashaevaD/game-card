@@ -16,6 +16,7 @@ export class AppComponent {
   level:string; 
 
   isLive:boolean = true;
+  saveLive:boolean = true;
 
   isWin:boolean = false;                            //need to show image win on html
   isLost:boolean = false;                   //get false, when your lives run out
@@ -65,8 +66,8 @@ export class AppComponent {
     this.isWin = flag;
   }
 
-  isAlive(i:boolean) {
-    this.isLive = false;
+  isAlive(flag:boolean) {
+    this.isLive = flag;
   }
 
 
@@ -94,8 +95,13 @@ export class AppComponent {
   }
 
   getTime () {
+    if (this.isLive) {
     this.setTime(this.level, this.size);
     this.timerId = setInterval (() => this.changeTime(), 1000);
+    } else {
+      this.isVerifiedSettings = false;
+    }
+    
   }
 
   changeTime() {
@@ -104,6 +110,7 @@ export class AppComponent {
       // if (!this.time) {
         clearInterval(this.timerId);
         this.isTimerTick = false;
+        this.saveLive = false;    //pop image lives array
         //this.setTime(this.level, this.size);
         return;
       
@@ -111,6 +118,7 @@ export class AppComponent {
        if (this.chekedTime && this.time) {
            clearInterval(this.timerId);
            this.isTimerTick = false;
+           this.saveLive = true;  //savelive
           // this.setTime(this.level, this.size);
            return;
          }
