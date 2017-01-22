@@ -10,11 +10,10 @@ export class TimerComponent implements OnInit {
 
   @Input()
   public time:number;
-  
+
   constructor() { }
 
   ngOnInit() {
   }
-  
 
 }

@@ -7,17 +7,19 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class WinOrLostComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
   @Input()
   public isWin:boolean;
   @Input()
   public time:number;
+  @Input()
+  public isLive:number;
+
+  constructor() {
+  }
+
+  ngOnInit() {
+  }
 
   imageWin:string = "assets/img/win.gif";   //image of winner
   imageLost:string = "assets/img/lost.gif"; //image of looser
-
 }

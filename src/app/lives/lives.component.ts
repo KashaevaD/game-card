@@ -7,10 +7,17 @@ import { Component, OnInit, Input, OnChanges, Output, EventEmitter } from '@angu
 })
 export class LivesComponent implements OnInit, OnChanges {
 
+  @Input()
+  public time:number;
+  @Input()
+  public save:boolean;                    //true if you are win and you heart is save
+  @Output() isLived:EventEmitter<boolean> = new EventEmitter();
+
   constructor() { }
 
   ngOnInit() {
   }
+
   ngOnChanges() {
     if (!this.save && this.time == 0) {
       this.livesImage.pop();
@@ -18,19 +25,15 @@ export class LivesComponent implements OnInit, OnChanges {
     if (this.livesImage.length > 0) {
       this.isLived.emit(true);
     }
-    else {
+    else if (this.livesImage.length == 0) {
       this.isLived.emit(false);
     }
   }
 
-    @Input() time;
-    @Input() save;
-    @Output() isLived:EventEmitter<boolean> = new EventEmitter();
-
-    livesImage:string[] = [                 //count heart
-    "assets/img/live.ico",
-    "assets/img/live.ico",
-    "assets/img/live.ico"
-    ];
+  livesImage:string[] = [                 //count heart
+  "assets/img/h1.png",
+  "assets/img/h1.png",
+  "assets/img/h1.png"
+  ];
 
 }

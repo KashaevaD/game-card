@@ -1,4 +1,4 @@
-import { Component, OnInit, Input,Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input,Output, EventEmitter, OnChanges} from '@angular/core';
 
 @Component({
   selector: 'app-cards',
@@ -6,19 +6,27 @@ import { Component, OnInit, Input,Output, EventEmitter} from '@angular/core';
   styleUrls: ['./cards.component.css']
 })
 
-export class CardsComponent implements OnInit {
-  @Input() size;                                   // count of cells = size*size
-  @Input() showBtnToStartGame;                     // is normal size, neeed to show button "Game Start"
-  @Input() level;                                  //level of game
-  @Input() isTimerTick;
+export class CardsComponent implements OnInit, OnChanges {
+  @Input() 
+  public size:number;                                   // count of cells = size*size
+  @Input()
+  public showBtnToStartGame:boolean;                    // is normal size, neeed to show button "Game Start"
+  @Input()
+  public level:number;                                  //level of game
+  @Input()
+  public isTimerTick:boolean;                            //if timer is run  = true
+  @Input()
+  public isLive:boolean;                                 //if count of lives more then 1, you can play again
+  @Input()
+  public isShowBtnToStart:boolean;
 
   @Output() checkTimer:EventEmitter<boolean> = new EventEmitter();  // true - you are winner, false - you are luser               
   @Output() isShowTimer:EventEmitter<boolean> = new EventEmitter(); // variable to show the timer on main app
-  @Output() showImageWin:EventEmitter<any> = new EventEmitter();
+  @Output() showImageWin:EventEmitter<any> = new EventEmitter();    //if you are win, the pictire will be shown
 
-  clickBtnStart:boolean = false;          //show table or not
+  public clickBtnStart:boolean = false;          //show table or not
 
-  images  = [                             //images in table
+  public images:{src:string, id:number}[]  = [                             //images in table
     {
       src: 'assets/img/0.jpg',
       id: 0
@@ -27,6 +35,7 @@ export class CardsComponent implements OnInit {
       src: 'assets/img/1.jpg',
       id: 1
     }
+    // },
     // {
     //   src: 'assets/img/2.jpg',
     //   id: 2
@@ -36,56 +45,34 @@ export class CardsComponent implements OnInit {
     //   id: 3
     // }
   ];
-  data: {src:string, id:number}[][];        //our data with image and their id(name)
+  public data: {src:string, id:number}[][];        //our data with image and their id(name)
 
-  countOpened:number = 0;                   //count active(click) images           
-  currentOpened: any[] = [];                //current opened image
-  hideClass:string;                         //variable for hide class
-  activeClass:string;                       //variable for active class
+  public currentOpened: any[] = [];                //current opened image
+  public hideClass:string;                         //variable for hide class
+  public activeClass:string;                       //variable for active class
 
-  countHiddenBlock: number = 0;             //count of hidden block, need to count disappeared pair image to choose the win or not
-   
-  constructor() {
+  public countHiddenBlock: number = 0;             //count of hidden block, need to count disappeared pair image to choose the win or not
+  constructor() {}
 
-  }
+  ngOnInit() {}
 
-  ngOnInit() {
-  
+  ngOnChanges() {
+     if (!this.isTimerTick && this.isLive) {
+       this.showBtnToStartGame = true;
+    }
   }
 
   getStart(button):void {                                  //start when your click on btn "GameStart"
-    //if (this.livesImage.length > 0) {
-      this.showImageWin.emit(false);
-      this.checkTimer.emit(false);
-      this.clickBtnStart =  true;
-     // this.isWin = false;
-      this.showBtnToStartGame = false;
-      this.data = this.createTable();
-
-      this.isTimerTick = button.returnValue;
-      this.isShowTimer.emit(this.isTimerTick); 
-     
-
-      
-    //}
-    //else {
-      //this.areYouLost();
-   //}
-    this.setDiffClassForLevel();  
+    this.showImageWin.emit(false);
+    this.checkTimer.emit(false);
+    this.clickBtnStart =  true;
+    this.showBtnToStartGame = false;
+    this.data = this.createTable();
+    this.isTimerTick = button.returnValue;
+    this.isShowTimer.emit(this.isTimerTick);
+    this.setDiffClassForLevel();
   }
 
-
-  // getRestart(i) {  
-  //       //this.isWin = false;
-  //      // this.isLost = false;                        //restart when your click on btn "New game"
-  //       this.data = [[]];
-  //       this.clickBtnStart =  true;
-  //       this.data = this.createTable();
-  //       this.setDiffClassForLevel();  
-        
-  //       //this.isRestart = true;
-  //      // this.livesImage.pop();
-  // }
 
   private setDiffClassForLevel() {                    //set different class to element dependent on level
      if (this.level == 2) {
@@ -173,26 +160,10 @@ export class CardsComponent implements OnInit {
   /*_____________________________________________________________________*/
   private areYouWin():boolean {
      if (this.countHiddenBlock === Math.pow(this.size,2) /2  && this.isTimerTick){
-      // this.isWin = true;
       this.countHiddenBlock = 0;
       this.currentOpened = [];
       return true;
-      //this.showImageWin.emit();
-     // this.checkTimer = true;
     }
   }
 
-  //  private areYouLost():void {
-  //   //if (!this.livesImage.length) {
-  //       this.isLost = true;
-  //       this.checkTimer.emit(false);
-  //       //this.checkTimer = false;
-  // //   //}
-  //  }  
-
-
 }
-
-
-
-

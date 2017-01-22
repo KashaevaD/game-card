@@ -12,7 +12,6 @@
      <div class="col-md-4">
        <h1 *ngIf="isStart && !isVerifiedSettings">Game Settings</h1>
        <h1 *ngIf="isVerifiedSettings">My darling player!!</h1>
-       
      </div>
 
   </div>
@@ -33,7 +32,8 @@
           <select class="form-control" id="select" [(ngModel)]="size">
               <option value="2" >2x2</option>
               <option value="4" >4x4</option>
-              <option value="4" >6x6</option>
+              <option value="6" >6x6</option>
+              <option value="8" >8x8</option>
           </select>
           <br>
           <a href="#" class="btn btn-success" (click)='getSize(size, level)' *ngIf='!isVerifiedSettings'>Click on me</a>
@@ -49,20 +49,20 @@
       </div>
       <div class="col-md-6">
         <!--Lives-->
-        <app-lives [save]="saveLive" [time]="time" (livesImage)=isAlive($event) *ngIf='isVerifiedSettings'></app-lives>
+        <app-lives [save]="saveLive" [time]="time" (isLived)=isAlive($event) *ngIf='isVerifiedSettings'></app-lives>
       </div>
    </div>
 
    <div class="row">
       <div class="col-md-12">
           <!--Table with cards-->
-          <app-cards [size]="size" [level]="level" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick" 
+          <app-cards [size]="size" [level]="level" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick" [isLive]="isLive" [isShowBtnToStart]='isShowBtnToStart'
           (checkTimer)=isWork($event) (isShowTimer)=isStartTimer($event) (showImageWin)=setWin($event) ></app-cards>
       </div>
 
       <div class="col-md-12">
           <!--Show gif when you win or loose-->
-          <app-win-or-lost [time]="time" [isWin]="isWin"> </app-win-or-lost>
+          <app-win-or-lost [time]="time" [isWin]="isWin" [isLive]="isLive" > </app-win-or-lost>
       </div>
    </div>
     
