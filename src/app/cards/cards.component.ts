@@ -60,6 +60,9 @@ export class CardsComponent implements OnInit, OnChanges {
      if (!this.isTimerTick && this.isLive) {
        this.showBtnToStartGame = true;
     }
+    else if (!this.isLive) {
+      this.showBtnToStartGame = false;
+    }
   }
 
   getStart(button):void {                                  //start when your click on btn "GameStart"
@@ -70,6 +73,8 @@ export class CardsComponent implements OnInit, OnChanges {
     this.data = this.createTable();
     this.isTimerTick = button.returnValue;
     this.isShowTimer.emit(this.isTimerTick);
+    this.countHiddenBlock = 0;
+    this.currentOpened = [];
     this.setDiffClassForLevel();
   }
 
