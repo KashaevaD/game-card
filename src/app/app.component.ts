@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TimerService } from './timer.service';
+// import {Timer} from "./timer/timer";
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { TimerService } from './timer.service';
 })
 export class AppComponent {
 
-  constructor(private timer: TimerService) {
+  constructor(private _timeService: TimerService) {
 
   }
 
@@ -27,12 +28,12 @@ export class AppComponent {
   isWin:boolean = false;                 //need to show image win on html
   isLost:boolean = false;                //get false, when your lives run out
 
-  time: number;                          //set time
+ // time: number;                          //set time
   timerId:any;
-  isTimerTick: boolean = false;          //is timer start? output variable from cards
-  chekedTime: boolean;                   //if you are win = true, or if you are lost = false
-  saveLive:boolean = true;
-  readonly oneSecond:number = 1000;
+  //isTimerTick: boolean = false;          //is timer start? output variable from cards
+  //chekedTime: boolean;                   //if you are win = true, or if you are lost = false
+  //saveLive:boolean = true;
+  //readonly oneSecond:number = 1000;
  
 
   isVisibleAllGame():void {               //game start working
@@ -52,14 +53,15 @@ export class AppComponent {
   }
 
   isStartTimer(flag:boolean) {
-    this.isTimerTick = flag;
-    if (this.isTimerTick) {
-      this.getTime();
+    this._timeService.setIsTimerTick(flag);
+    if (this._timeService.getIsTimerTick()) {
+     this._timeService.getTime(this.level, this.size);
+      
     }
   }
 
   isWork(flag) {
-    this.chekedTime = flag;
+    this._timeService.setChekedTime(flag);
   }
 
   setWin(flag) {
@@ -68,66 +70,14 @@ export class AppComponent {
 
   isAlive(flag:boolean) {
     this.isLive = flag;
-
   }
 
-  public setTime(level, size) {
-      if (level == 1) {
-
-        if (size == 2) {
-           this.time = 6 * this.oneSecond;
-        }
-        else if (size == 4) {
-          this.time = 30 * this.oneSecond;
-        }
-        else if (size == 6) {
-          this.time = 50 * this.oneSecond;
-        }
-        else if (size == 8) { 
-          this.time = 60 * this.oneSecond;
-        }
-
-      }
-      else if (level == 2) {
-
-         if (size == 2) {
-           this.time = 6 * this.oneSecond;
-        }
-        else if (size == 4) {
-          this.time = 30 * this.oneSecond;
-        }
-        else if (size == 6) {
-          this.time = 60 * this.oneSecond;
-        }
-        else if (size == 8) {
-          this.time = 80 * this.oneSecond;
-        }
-
-      }
+  isTimerTick(): boolean {
+    return this._timeService.getIsTimerTick();            //get variable isTimerTick in service
   }
 
-  getTime () {
-    this.setTime(this.level, this.size);
-    this.timerId = setInterval (() => this.changeTime(), 1000);
+  getTime():number {
+    return this._timeService.getCurrentTime();            //get variable time in service
   }
 
-  changeTime() {
-
-    if (!this.time && !this.chekedTime) {
-      clearInterval(this.timerId);
-      this.isTimerTick = false;
-      this.saveLive = false;    //pop image lives array
-      return;
-    } else {
-       if (this.chekedTime && this.time) {
-           clearInterval(this.timerId);
-           this.isTimerTick = false;
-           this.saveLive = true;  //savelive
-           return;
-         }
-        this.isTimerTick = true;
-        this.time =  this.time - 1000;
-        return this.time;
-    }
-  }
 }

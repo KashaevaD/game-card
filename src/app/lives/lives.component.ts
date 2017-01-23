@@ -19,13 +19,14 @@ export class LivesComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (!this.save && this.time == 0) {
+    if (!this.save && this.time === 0) {
       this.livesImage.pop();
     }
+    
     if (this.livesImage.length > 0) {
       this.isLived.emit(true);
     }
-    else if (this.livesImage.length == 0) {
+    else if (this.livesImage.length === 0) {
       this.isLived.emit(false);
     }
   }

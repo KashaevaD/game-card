@@ -45,24 +45,24 @@
   <div class="row">
       <div class="col-md-6">
         <!--Timer-->
-        <app-timer [time]="time" *ngIf="isTimerTick"></app-timer> 
+        <app-timer [time]=" getTime()" *ngIf="isTimerTick()"></app-timer> 
       </div>
       <div class="col-md-6">
         <!--Lives-->
-        <app-lives [save]="saveLive" [time]="time" (isLived)=isAlive($event) *ngIf='isVerifiedSettings'></app-lives>
+        <app-lives [save]="saveLive" [time]="getTime()" (isLived)=isAlive($event) *ngIf='isVerifiedSettings'></app-lives>
       </div>
    </div>
 
    <div class="row">
       <div class="col-md-12">
           <!--Table with cards-->
-          <app-cards [size]="size" [level]="level" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick" [isLive]="isLive" [isShowBtnToStart]='isShowBtnToStart'
+          <app-cards [size]="size" [level]="level" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick()" [isLive]="isLive" [isShowBtnToStart]='isShowBtnToStart'
           (checkTimer)=isWork($event) (isShowTimer)=isStartTimer($event) (showImageWin)=setWin($event) ></app-cards>
       </div>
 
       <div class="col-md-12">
           <!--Show gif when you win or loose-->
-          <app-win-or-lost [time]="time" [isWin]="isWin" [isLive]="isLive" > </app-win-or-lost>
+          <app-win-or-lost [time]="getTime()" [isWin]="isWin" [isLive]="isLive" > </app-win-or-lost>
       </div>
    </div>
     
