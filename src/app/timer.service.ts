@@ -16,14 +16,14 @@ export class TimerService  {
 	      //    this.time = 6 * this.oneSecond;
 	      // }
 	      // else
-				if (size == 4) {
-	        this.time = 30 * this.oneSecond;
+		  if (size == 4) {
+	        this.time = 40 * this.oneSecond;
 	      }
 	      else if (size == 6) {
-	        this.time = 50 * this.oneSecond;
+	        this.time = 60 * this.oneSecond;
 	      }
 	      else if (size == 8) { 
-	        this.time = 60 * this.oneSecond;
+	        this.time = 80 * this.oneSecond;
 	      }
 
 	    }
@@ -33,14 +33,14 @@ export class TimerService  {
 	      //    this.time = 6 * this.oneSecond;
 	      // }
 	      // else
-				if (size == 4) {
-	        this.time = 30 * this.oneSecond;
+		  if (size == 4) {
+	        this.time = 40 * this.oneSecond;
 	      }
 	      else if (size == 6) {
-	        this.time = 60 * this.oneSecond;
+	        this.time = 70 * this.oneSecond;
 	      }
 	      else if (size == 8) {
-	        this.time = 80 * this.oneSecond;
+	        this.time = 90 * this.oneSecond;
 	      }
 
 	    }
