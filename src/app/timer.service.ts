@@ -12,10 +12,11 @@ export class TimerService  {
 	public setTime(level, size):number {
 	    if (level == 1) {
 
-	      if (size == 2) {
-	         this.time = 6 * this.oneSecond;
-	      }
-	      else if (size == 4) {
+	      // if (size == 2) {
+	      //    this.time = 6 * this.oneSecond;
+	      // }
+	      // else
+				if (size == 4) {
 	        this.time = 30 * this.oneSecond;
 	      }
 	      else if (size == 6) {
@@ -28,10 +29,11 @@ export class TimerService  {
 	    }
 	    else if (level == 2) {
 
-	       if (size == 2) {
-	         this.time = 6 * this.oneSecond;
-	      }
-	      else if (size == 4) {
+	      //  if (size == 2) {
+	      //    this.time = 6 * this.oneSecond;
+	      // }
+	      // else
+				if (size == 4) {
 	        this.time = 30 * this.oneSecond;
 	      }
 	      else if (size == 6) {
