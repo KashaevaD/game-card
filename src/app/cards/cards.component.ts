@@ -59,7 +59,8 @@ export class CardsComponent implements OnInit, OnChanges {
   }
 
   addClassActive(i):void {                                  //add active class on active td
-    // let img = i.target.firstElementChild;  
+   
+   // let img = i.target.firstElementChild;  
     // if(this._card.getLengthCurrentOpened() < 2) {
     //   if (img !== null) {                                   //if you click double on the picture = > it wiil be normal, nothing happend
     //     this._card.pushElementInCurrentOpened(img);         //push elem to the current array with cards
@@ -78,6 +79,7 @@ export class CardsComponent implements OnInit, OnChanges {
     //    this.showImageWin.emit(true);
     //    this.showBtnToStartGame = true;
     // }
+    
     let img = i.target.firstElementChild;
 
     if (img !== null) {
