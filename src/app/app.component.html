@@ -1,7 +1,32 @@
 <div class="container" (isShow)=isAlive($event)> 
-  <div class="row" >
+  <div class="row" *ngIf="!isRegistrate">
 
-    <div class="col-md-4" *ngIf="!isStart">
+    <div *ngIf="newUser">
+    <label for="nonuser">Name:</label>
+    <input type="text" id="nonuser" #newuser />
+    <button (click)="addUser(newuser.value)">Sign in</button>
+    </div>
+
+    
+    <ul>
+        <li *ngFor="let item of users | async">
+          {{ item.name }}
+        </li>
+    </ul>
+
+    <div *ngIf="!newUser">
+      <label for="user">Write name to sign in:</label>
+      <input type="text" id="user" #e/>
+      <button (click)="check(e.value)">Check name</button>
+    </div>
+
+  </div>
+
+<!-------------------------------------------------------------------->
+
+  <div class="row"  *ngIf="isRegistrate">
+
+    <div class="col-md-4" *ngIf="!isStart ">
         <h1>Click to start the game</h1>
     </div>
     <div class="col-md-4" *ngIf="!isStart">
@@ -11,7 +36,7 @@
     </div>
      <div class="col-md-4">
        <h1 *ngIf="isStart && !isVerifiedSettings">Game Settings</h1>
-       <h1 *ngIf="isVerifiedSettings">My darling player!!</h1>
+       <h1 *ngIf="isVerifiedSettings">My darling player {{userName}}!!</h1>
      </div>
 
   </div>

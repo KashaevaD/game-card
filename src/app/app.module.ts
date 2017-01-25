@@ -10,6 +10,9 @@ import { LivesComponent } from './lives/lives.component';
 import { LevelComponent } from './level/level.component';
 import { WinOrLostComponent } from './win-or-lost/win-or-lost.component';
 
+import {AngularFireModule} from 'angularfire2';
+import {firebaseConfig} from './../environments/firebase.config';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +25,8 @@ import { WinOrLostComponent } from './win-or-lost/win-or-lost.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    AngularFireModule.initializeApp(firebaseConfig)
   ],
   providers: [],
   bootstrap: [AppComponent]
