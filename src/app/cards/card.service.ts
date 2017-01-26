@@ -66,7 +66,7 @@ export class CardService {
     return matrix;
   }
   // _____________________________________________________
-  public setDiffClassForLevel(level) {                    //set different class to element dependent on level
+  public setDiffClassForLevel(level) {                        //set different class to element dependent on level
      if (level == 2) {
         this.hideClass = "hide";
         this.activeClass = "active";     
