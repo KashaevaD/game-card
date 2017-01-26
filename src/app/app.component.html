@@ -1,23 +1,26 @@
 <div class="container" (isShow)=isAlive($event)> 
+  <h1 style="color:blue">Game and relax</h1>
+  <h2 style="color:blue">You can look at my code-cat <a href="https://github.com/KashaevaD/game-card">here</a></h2>
   <div class="row" *ngIf="!isRegistrate">
 
-    <div *ngIf="newUser">
-    <label for="nonuser">Name:</label>
-    <input type="text" id="nonuser" #newuser />
-    <button (click)="addUser(newuser.value)">Sign in</button>
+    <div class="form-group has-success" *ngIf="newUser" style="width:40%">
+      <label class="control-label" for="nonuser" style="font-size: 17px">Regestration:</label>
+      <input type="text" class="form-control" id="nonuser" placeholder="Enter your name" #newuser />
+       <br>
+      <a href="#" class="btn btn-success" (click)="addUser(newuser.value)">Sign in</a>
     </div>
 
-    
-    <ul>
+    <!--<ul>
         <li *ngFor="let item of users | async">
           {{ item.name }}
         </li>
-    </ul>
+    </ul>-->
 
-    <div *ngIf="!newUser">
-      <label for="user">Write name to sign in:</label>
-      <input type="text" id="user" #e/>
-      <button (click)="check(e.value)">Check name</button>
+     <div class="form-group has-success" *ngIf="!newUser" style="width:40%">
+      <label class="control-label" for="user" style="font-size: 17px">Write name to sign in:</label>
+      <input type="text" class="form-control" id="user" placeholder="Enter your name" #e />
+      <br>
+      <a href="#" class="btn btn-success" (click)="check(e.value)">Check name</a>
     </div>
 
   </div>
@@ -82,7 +85,7 @@
       <div class="col-md-12">
           <!--Table with cards-->
           <app-cards [size]="size" [level]="level" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick()" [isLive]="isLive" [isShowBtnToStart]='isShowBtnToStart'
-          (checkTimer)=isWork($event) (isShowTimer)=isStartTimer($event) (showImageWin)=setWin($event) ></app-cards>
+          (checkTimer)=isWork($event) (isShowTimer)=isStartTimer($event) (showImageWin)=setWin($event) (newLevel)="isResetNewLevel($event)"></app-cards>
       </div>
 
       <div class="col-md-12">

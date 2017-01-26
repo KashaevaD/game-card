@@ -25,9 +25,11 @@ export class CardsComponent implements OnInit, OnChanges {
   @Output() checkTimer:EventEmitter<boolean> = new EventEmitter();  // true - you are winner, false - you are luser               
   @Output() isShowTimer:EventEmitter<boolean> = new EventEmitter(); // variable to show the timer on main app
   @Output() showImageWin:EventEmitter<any> = new EventEmitter();    //if you are win, the pictire will be shown
+  @Output() newLevel:EventEmitter<any> = new EventEmitter();
 
   public clickBtnStart:boolean = false;            //show table with cards or not
   public data: {src:string, id:number}[][];        //our data with image and their id(name)  
+  public coutnOfVictory = 0;
 
   constructor(private _card: CardService) {}
 
@@ -42,7 +44,9 @@ export class CardsComponent implements OnInit, OnChanges {
     }
   }
 
-  getStart(button):void {                                  //start when your click on btn "GameStart"
+  getStart(button):void {   
+    //if ( this.coutnOfVictory < 3) {
+                                    //start when your click on btn "GameStart"
     this.data = this._card.createTable(this.size);         //create our table cards
 
     this.showImageWin.emit(false);                          //hide win image
@@ -56,6 +60,7 @@ export class CardsComponent implements OnInit, OnChanges {
     this._card.setCountHiddenBlock(0);
     this._card.setCurrentOpened([]);
     this._card.setDiffClassForLevel(this.level);
+    //} 
   }
 
   addClassActive(i):void {                                  //add active class on active td
@@ -85,23 +90,28 @@ export class CardsComponent implements OnInit, OnChanges {
     if (img !== null) {
       this._card.pushElementInCurrentOpened(img);
       img.classList.add(this._card.getActiveClass());
+      console.log(this._card.getClassList());
       if(this._card.getLengthCurrentOpened() === 2) {
-
         setTimeout(()=>{
 
           if (this._card.getFirstElementNameCurOpened() === this._card.getLastElementNameCurOpened() ) { 
              this._card.addClassHide();
           }
           this._card.resetSettings();
+
           if(this._card.areYouWin(this.size,this.isTimerTick)) {
              this.checkTimer.emit(true);
              this.showImageWin.emit(true);
+             this.coutnOfVictory++;
+             //if (this.coutnOfVictory < 3) this.showBtnToStartGame = true;
              this.showBtnToStartGame = true;
+             this.newLevel.emit( this.coutnOfVictory);
           }
-        },350);
+
+        },250);
 
       }
-    }
+    }// else {this._card.resetSettings();}
 
   }
 

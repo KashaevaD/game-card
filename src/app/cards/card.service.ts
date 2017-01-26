@@ -124,4 +124,8 @@ export class CardService {
     return this.currentOpened[1].name;
   }
 
+  public getClassList(){
+    return this.currentOpened[0].classList.toString();
+  }
+
 }

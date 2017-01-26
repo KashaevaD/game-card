@@ -10,7 +10,7 @@
          <tr *ngFor="let rows of data" >
            <td class="cell"*ngFor="let cell of rows" >
              <div class="styleCard" (click)="addClassActive($event)">
-               <img [src]="cell.src" [name]="cell.id" width="100" height="100" class="cards">
+               <img [src]="cell.src" [name]="cell.id" width="100" height="100" class="cards" unselectable="on">  
              </div>
            </td>
          </tr>
@@ -18,3 +18,4 @@
    </div>
 
 </div>
+

@@ -9,3 +9,7 @@ h1 {
      font-size: 35px;
      color: green;
 }
+h2 {
+    text-shadow: -1px 5px 5px rgba(75, 137, 167, 0.88);
+     color: green;
+}

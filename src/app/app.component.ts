@@ -120,4 +120,12 @@ export class AppComponent {
     return this._timeService.getCurrentTime();            //get variable time in service
   }
 
+
+  isResetNewLevel(count) {
+    // if (count === 3) {
+    //  this.isStart = true;
+    //  this.isVerifiedSettings = false;
+    // }
+  }
+
 }
