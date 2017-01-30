@@ -36,17 +36,26 @@ export class CardsComponent implements OnInit, OnChanges {
   @Output() resetCountOpened: EventEmitter<any> = new EventEmitter();
 
   public clickBtnStart:boolean = false;            //show table with cards or not
-  public data: {src:string, id:number,isOpen: boolean, isHidden:boolean}[][];        //our data with image and their id(name)  
+  //public data: {src:string, id:number,isOpen: boolean, isHidden:boolean}[][];        //our data with image and their id(name)  
+  public data: any[][];
   public coutnOfVictory = 0;
   public cell;
 
-  cells:FirebaseListObservable<any[]>;
+  // cells:FirebaseListObservable<any[]>;
   //  cellsFB: FirebaseListObservable<any[]>;
+  cells:FirebaseListObservable<any[]>;
  
 
   constructor(private _card: CardService, private af:AngularFire) {
+     // this.cells = af.database.list('/cells');
      this.cells = af.database.list('/cells');
     //  this.cellsFB.subscribe(data=>this.cells);
+     //const observableCells = af.database.list('/cells');
+
+    this.cells.subscribe(cell => {
+      this.data = cell[0];
+      console.log('card', this.data);
+    })
   }
 
 
@@ -66,8 +75,9 @@ export class CardsComponent implements OnInit, OnChanges {
     this.cells.remove();
     //if ( this.coutnOfVictory < 3) {
                                     //start when your click on btn "GameStart"
-    this.data = this._card.createTable(this.size);         //create our table cards
+    //this.data = this._card.createTable(this.size);         //create our table cards
     this.sendToFireBase();
+
     this.sendData.emit(this.data);
 
     this.showImageWin.emit(false);                          //hide win image
@@ -87,11 +97,13 @@ export class CardsComponent implements OnInit, OnChanges {
   }
 
   sendToFireBase() {
-    this.data.forEach((row) => {
-      row.forEach((cell)=>{
-        this.cells.push({src: cell.src, id: cell.id, isOpen: cell.isOpen, isHidden: cell.isHidden});
-      });
-    });
+    // this.data.forEach((row) => {
+    //   row.forEach((cell)=>{
+    //     this.cells.push({src: cell.src, id: cell.id, isOpen: cell.isOpen, isHidden: cell.isHidden});
+    //   });
+    // });
+    //this.cells.push(this.data);
+    this.cells.push(this._card.createTable(this.size));
   }  
 
   addClassActive(cell):void { 

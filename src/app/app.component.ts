@@ -15,7 +15,7 @@ export class AppComponent {
   users: FirebaseListObservable<any[]>;
   sizeSubjectUser: Subject<any>;
   sizeSubjectCells: Subject<any>;
-  cells: FirebaseListObservable<any[]>;
+  cells: FirebaseListObservable<any[][]>;
 
 
   constructor(private _timeService: TimerService, private af : AngularFire) {
@@ -33,7 +33,7 @@ export class AppComponent {
     // subscribe to changes
     queryObservableUser.subscribe(queriedItems => {
       if (queriedItems.length !== 0){
-         console.log(queriedItems);
+         // console.log(queriedItems);
          this.isRegistrate = true; 
       } 
       else {
@@ -43,16 +43,16 @@ export class AppComponent {
       //console.log(queriedItems);  
     });
 
-    const queryObservableCells = af.database.list('/cells', {
-      query: {
-        orderByChild: 'id',
-        equalTo: (this.sizeSubjectCells as any).id 
-      }
-    });
+    // const queryObservableCells = af.database.list('/cells', {
+    //   query: {
+    //     orderByChild: 'id',
+    //     equalTo: (this.sizeSubjectCells as any).id 
+    //   }
+    // });
 
-    queryObservableCells.subscribe(queriedItems => {
-      console.log(queriedItems);  
-    })
+    this.cells.subscribe(queriedItems => {
+      //console.log('app',queriedItems);  
+    });
 
 
   }
@@ -182,10 +182,9 @@ export class AppComponent {
           this.currentOpened[0].isOpen = false;
           this.currentOpened[1].isOpen = false;
 
-          this.sizeSubjectCells.next( this.currentOpened[0]); 
-          this.sizeSubjectCells.next( this.currentOpened[1]); 
+          // this.sizeSubjectCells.next( this.currentOpened[0]); 
+          // this.sizeSubjectCells.next( this.currentOpened[1]); 
 
-          
           // this.addCellsToBase( this.currentOpened[0]);
           // this.addCellsToBase( this.currentOpened[1]);
           this.currentOpened = [];

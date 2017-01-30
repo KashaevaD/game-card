@@ -77,6 +77,9 @@ export class CardService {
         count++;
       }
     }
+
+
+    
     return matrix;
   }
  
