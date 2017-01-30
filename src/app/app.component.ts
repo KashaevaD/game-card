@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TimerService } from './timer.service';
 import {AngularFire, FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2';
 import { Subject } from 'rxjs/Subject';
@@ -13,21 +13,25 @@ import { Subject } from 'rxjs/Subject';
 })
 export class AppComponent {
   users: FirebaseListObservable<any[]>;
-  sizeSubject: Subject<any>;
+  sizeSubjectUser: Subject<any>;
+  sizeSubjectCells: Subject<any>;
+  cells: FirebaseListObservable<any[]>;
 
 
   constructor(private _timeService: TimerService, private af : AngularFire) {
     this.users = af.database.list('/users');
-    this.sizeSubject = new Subject();
+    this.cells = af.database.list('/cells');
+    this.sizeSubjectUser = new Subject();
+    this.sizeSubjectCells = new Subject();
 
-    const queryObservable = af.database.list('/users', {
+    const queryObservableUser = af.database.list('/users', {
       query: {
         orderByChild: 'name',
-        equalTo: this.sizeSubject 
+        equalTo: this.sizeSubjectUser 
       }
     });
     // subscribe to changes
-    queryObservable.subscribe(queriedItems => {
+    queryObservableUser.subscribe(queriedItems => {
       if (queriedItems.length !== 0){
          console.log(queriedItems);
          this.isRegistrate = true; 
@@ -39,7 +43,23 @@ export class AppComponent {
       //console.log(queriedItems);  
     });
 
+    const queryObservableCells = af.database.list('/cells', {
+      query: {
+        orderByChild: 'id',
+        equalTo: (this.sizeSubjectCells as any).id 
+      }
+    });
+
+    queryObservableCells.subscribe(queriedItems => {
+      console.log(queriedItems);  
+    })
+
+
   }
+  data:any;
+  currentOpened:any[] = [];
+  countHiddenBlock:number = 0;
+
 
   isRegistrate:boolean = false;
   newUser:boolean = false;
@@ -54,26 +74,32 @@ export class AppComponent {
 
   isLive:boolean = true;
  
-
   isWin:boolean = false;                 //need to show image win on html
   isLost:boolean = false;                //get false, when your lives run out
 
- // time: number;                          //set time
   timerId:any;
-  //isTimerTick: boolean = false;          //is timer start? output variable from cards
-  //chekedTime: boolean;                   //if you are win = true, or if you are lost = false
-  //saveLive:boolean = true;
-  //readonly oneSecond:number = 1000;
+  
   
   check(name:string) {
-      this.userName = name;
-     this.sizeSubject.next(name);
+     this.userName = name;
+     this.sizeSubjectUser.next(name);
+     //console.log('User',this.sizeSubjectUser);
   }
 
   addUser(newName:string) {
     this.users.push({ name: newName });
     this.isRegistrate = true; 
     this.userName = newName;
+  }
+
+  // addCellsToBase(cell:any) {
+    
+  // }
+
+
+
+  getData(data) {
+    this.data = data;
   }
 
   isVisibleAllGame():void {               //game start working
@@ -127,5 +153,48 @@ export class AppComponent {
     //  this.isVerifiedSettings = false;
     // }
   }
+  resetCount(number) {
+    this.countHiddenBlock = number;
+    this.currentOpened = [];
+  }
+
+
+  deleteCard(elem) {
+    if (this.currentOpened.indexOf(elem) === -1 && elem.isOpen){
+      this.currentOpened.push(elem);
+
+      //console.log(this);
+
+      if (this.currentOpened.length == 2) {
+        setTimeout(()=>{
+          if (this.currentOpened[0].src === this.currentOpened[1].src && this.currentOpened[0].isOpen === this.currentOpened[1].isOpen) {
+            this.currentOpened[0].isHidden = true;
+            this.currentOpened[1].isHidden = true;
+            ++this.countHiddenBlock;
+            if(this.countHiddenBlock === Math.pow(this.size,2) /2  && this.isTimerTick) {
+               this.isWin = true;
+               this._timeService.setChekedTime(true);
+               this.isVerifiedSettings = true;
+               this.isShowBtnToStart = true;
+            }
+          }else {
+          }
+          this.currentOpened[0].isOpen = false;
+          this.currentOpened[1].isOpen = false;
+
+          this.sizeSubjectCells.next( this.currentOpened[0]); 
+          this.sizeSubjectCells.next( this.currentOpened[1]); 
+
+          
+          // this.addCellsToBase( this.currentOpened[0]);
+          // this.addCellsToBase( this.currentOpened[1]);
+          this.currentOpened = [];
+        },250);
+        
+      } 
+    }
+  }
+
+
 
 }

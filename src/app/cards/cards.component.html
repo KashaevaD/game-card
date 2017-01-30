@@ -9,9 +9,9 @@
        <table>
          <tr *ngFor="let rows of data" >
            <td class="cell"*ngFor="let cell of rows" >
-             <div class="styleCard" (click)="addClassActive($event)">
-               <img [src]="cell.src" [name]="cell.id" width="100" height="100" class="cards" unselectable="on">  
-             </div>
+            <div *ngIf="cell.isOpen && !cell.isHidden" [ngStyle]="{'background-image': 'url(' + cell.src + ')'}" (click)="addClassActive(cell)"  class="card"></div>
+            <div *ngIf ="!cell.isOpen && !cell.isHidden" [ngStyle]="{'background-image': 'url(assets/img/game.jpg)'}" (click)="addClassActive(cell)"  [ngClass]="{hideCard: cell.isHidden}" class="card"></div>
+              <!--<img [src]="cell.src" [id]="cell.id" width="100" height="100" class="cards" (click)="addClassActive(cell)">  -->
            </td>
          </tr>
        </table>

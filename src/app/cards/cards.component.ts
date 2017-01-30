@@ -1,5 +1,6 @@
 import { Component, OnInit, Input,Output, EventEmitter, OnChanges} from '@angular/core';
 import {CardService} from './card.service'
+import {AngularFire, FirebaseListObservable, FirebaseObjectObservable} from 'angularfire2';
 
 @Component({
   selector: 'app-cards',
@@ -21,17 +22,34 @@ export class CardsComponent implements OnInit, OnChanges {
   public isLive:boolean;                                 //if count of lives more then 1, you can play again
   @Input()
   public isShowBtnToStart:boolean;
+  @Input()
+  public countHiddenBlock:number;
+  // @Input()
+  // public cell;
 
   @Output() checkTimer:EventEmitter<boolean> = new EventEmitter();  // true - you are winner, false - you are luser               
   @Output() isShowTimer:EventEmitter<boolean> = new EventEmitter(); // variable to show the timer on main app
   @Output() showImageWin:EventEmitter<any> = new EventEmitter();    //if you are win, the pictire will be shown
   @Output() newLevel:EventEmitter<any> = new EventEmitter();
+  @Output() sendData:EventEmitter<any> = new EventEmitter();
+  @Output() removeCard: EventEmitter<any> = new EventEmitter();
+  @Output() resetCountOpened: EventEmitter<any> = new EventEmitter();
 
   public clickBtnStart:boolean = false;            //show table with cards or not
-  public data: {src:string, id:number}[][];        //our data with image and their id(name)  
+  public data: {src:string, id:number,isOpen: boolean, isHidden:boolean}[][];        //our data with image and their id(name)  
   public coutnOfVictory = 0;
+  public cell;
 
-  constructor(private _card: CardService) {}
+  cells:FirebaseListObservable<any[]>;
+  //  cellsFB: FirebaseListObservable<any[]>;
+ 
+
+  constructor(private _card: CardService, private af:AngularFire) {
+     this.cells = af.database.list('/cells');
+    //  this.cellsFB.subscribe(data=>this.cells);
+  }
+
+
 
   ngOnInit() {}
 
@@ -45,9 +63,12 @@ export class CardsComponent implements OnInit, OnChanges {
   }
 
   getStart(button):void {   
+    this.cells.remove();
     //if ( this.coutnOfVictory < 3) {
                                     //start when your click on btn "GameStart"
     this.data = this._card.createTable(this.size);         //create our table cards
+    this.sendToFireBase();
+    this.sendData.emit(this.data);
 
     this.showImageWin.emit(false);                          //hide win image
     this.checkTimer.emit(false);                            //set false to you loser image
@@ -56,63 +77,38 @@ export class CardsComponent implements OnInit, OnChanges {
 
     this.isTimerTick = button.returnValue;                  //start timer if tou click on btnStart
     this.isShowTimer.emit(this.isTimerTick);                //show timer in the screen
+
+    this.resetCountOpened.emit(0);
     //reset all params
-    this._card.setCountHiddenBlock(0);
-    this._card.setCurrentOpened([]);
-    this._card.setDiffClassForLevel(this.level);
+    // this._card.setCountHiddenBlock(0);
+    // this._card.setCurrentOpened([]);
+    // this._card.setDiffClassForLevel(this.level);
     //} 
   }
 
-  addClassActive(i):void {                                  //add active class on active td
+  sendToFireBase() {
+    this.data.forEach((row) => {
+      row.forEach((cell)=>{
+        this.cells.push({src: cell.src, id: cell.id, isOpen: cell.isOpen, isHidden: cell.isHidden});
+      });
+    });
+  }  
+
+  addClassActive(cell):void { 
+    this.cell = cell;                                 //add active class on active td
+    this.cell.isOpen = !this.cell.isOpen;
+    this.removeCard.emit(this.cell);
    
-   // let img = i.target.firstElementChild;  
-    // if(this._card.getLengthCurrentOpened() < 2) {
-    //   if (img !== null) {                                   //if you click double on the picture = > it wiil be normal, nothing happend
-    //     this._card.pushElementInCurrentOpened(img);         //push elem to the current array with cards
-    //     img.classList.add(this._card.getActiveClass());     //add class active to the card
-    //   } 
-    // }
-    // else  if (this._card.getLengthCurrentOpened() === 2) {
-    //     if (this._card.getFirstElementNameCurOpened() === this._card.getLastElementNameCurOpened() ) { 
-    //         this._card.addClassHide();                      //hide the same cards
-    //     }
-    //     this._card.resetSettings();                         //to close all card
-    // }
-
-    // if(this._card.areYouWin(this.size,this.isTimerTick)) {
-    //    this.checkTimer.emit(true);
-    //    this.showImageWin.emit(true);
-    //    this.showBtnToStartGame = true;
-    // }
-    
-    let img = i.target.firstElementChild;
-
-    if (img !== null) {
-      this._card.pushElementInCurrentOpened(img);
-      img.classList.add(this._card.getActiveClass());
-      console.log(this._card.getClassList());
-      if(this._card.getLengthCurrentOpened() === 2) {
-        setTimeout(()=>{
-
-          if (this._card.getFirstElementNameCurOpened() === this._card.getLastElementNameCurOpened() ) { 
-             this._card.addClassHide();
-          }
-          this._card.resetSettings();
-
-          if(this._card.areYouWin(this.size,this.isTimerTick)) {
-             this.checkTimer.emit(true);
-             this.showImageWin.emit(true);
-             this.coutnOfVictory++;
-             //if (this.coutnOfVictory < 3) this.showBtnToStartGame = true;
-             this.showBtnToStartGame = true;
-             this.newLevel.emit( this.coutnOfVictory);
-          }
-
-        },250);
-
-      }
-    }// else {this._card.resetSettings();}
-
+    //if(this._card.areYouWin(this.size,this.isTimerTick, )) {
+     //if(this.countHiddenBlock === Math.pow(this.size,2) /2  && this.isTimerTick) {
+        //this.checkTimer.emit(true);
+        //this.showImageWin.emit(true);
+        //this.coutnOfVictory++;
+        //if (this.coutnOfVictory < 3) this.showBtnToStartGame = true;
+        //this.showBtnToStartGame = true;
+        //this.newLevel.emit(this.coutnOfVictory);
+    //}
+   //console.log(this.cell);
   }
 
 

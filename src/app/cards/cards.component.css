@@ -1,17 +1,18 @@
-.styleCard  .cards {
+/*.cards {
     width:100px;
     height:100px;
     border-radius: 10px;
     display: none;
+    border: 2px solid green;
 }
 .styleCard {
     width: 100px;
     height:100px;
     border: 2px solid green;
     border-radius: 10px;
-}
+}*/
 
-.cell.hideBlock {
+/*.cell.hideBlock {
   opacity: 0;
   transition: all 1s;
 }
@@ -19,18 +20,17 @@
 .cell.hide {
   opacity: 0;
   transition: all 1s;
-}
+}*/
 
-
-.styleCard .cards.activeBlock {
+ /*.cards.activeBlock {
     display: block;
     transition: all 1s;
-}
-
+}*/
+/*
 .styleCard .cards.active {
     display: block;
     transition: all 1s;
-}
+}*/
 
 table {
     position: absolute;
@@ -40,8 +40,23 @@ table {
 .cell {
    width: 100px;
    height:100px;
-   background-image: url('assets/img/game.jpg');
+   /*background-image: url('assets/img/game.jpg');
    -webkit-background-size: contain;
    background-size: contain;
    border-radius: 10px;
+   border: 2px solid green;*/
+}
+
+.card{
+  border: 2px solid green;
+  width: 100px;
+  height: 100px;
+  border-radius:10px;
+  background-size: cover;
+  margin:10px;
+  margin-left:20px;
+}
+.card.hideCard {
+	opacity: 0;
+	transition: all 2ms;
 }

@@ -58,7 +58,7 @@
           <!--Choose the dimension-->
           <label for="select" class="control-label">Select dimension</label>
           <select class="form-control" id="select" [(ngModel)]="size">
-              <!--<option value="2" >2x2</option>-->
+              <option value="2" >2x2</option>
               <option value="4" >4x4</option>
               <option value="6" >6x6</option>
               <option value="8" >8x8</option>
@@ -84,8 +84,9 @@
    <div class="row">
       <div class="col-md-12">
           <!--Table with cards-->
-          <app-cards [size]="size" [level]="level" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick()" [isLive]="isLive" [isShowBtnToStart]='isShowBtnToStart'
-          (checkTimer)=isWork($event) (isShowTimer)=isStartTimer($event) (showImageWin)=setWin($event) (newLevel)="isResetNewLevel($event)"></app-cards>
+          <app-cards [size]="size" [level]="level" [countHiddenBlock]="countHiddenBlock" [showBtnToStartGame]='isVerifiedSettings' [isTimerTick]="isTimerTick()" [isLive]="isLive" [isShowBtnToStart]='isShowBtnToStart'
+          (resetCountOpened)="resetCount($event)" (checkTimer)=isWork($event) (isShowTimer)=isStartTimer($event) (showImageWin)=setWin($event) (newLevel)="isResetNewLevel($event)"  (removeCard)="deleteCard($event)">
+          </app-cards>
       </div>
 
       <div class="col-md-12">
